@@ -10,7 +10,10 @@ var userAnswers = [];
 
 var createQuestions = [];
 
+var LETTERS = ['A', 'B', 'C', 'D'];
+
 function loadData() {
+
   var saved = localStorage.getItem('quizapp-quizzes');
   if (saved) {
     allQuizzes = JSON.parse(saved);
@@ -21,7 +24,7 @@ function loadData() {
         title: 'Наука и природа',
         questions: [
           {
-            text: 'Какая планета самая большая в солнечной системе?',
+            text: 'Какая планета самая большая в Солнечной системе?',
             options: ['Земля', 'Сатурн', 'Юпитер', 'Нептун'],
             correct: 2
           },
@@ -32,12 +35,7 @@ function loadData() {
           },
           {
             text: 'Что такое фотосинтез?',
-            options: [
-              'Дыхание животных',
-              'Преобразование света в энергию растениями',
-              'Процесс пищеварения',
-              'Тип размножения'
-            ],
+            options: ['Дыхание животных', 'Преобразование света в энергию растениями', 'Процесс пищеварения', 'Тип размножения'],
             correct: 1
           }
         ]
@@ -67,6 +65,69 @@ function loadData() {
             correct: 3
           }
         ]
+      },
+      {
+        id: 'q3',
+        title: 'Кино и культура',
+        questions: [
+          {
+            text: 'Кто снял фильм «Интерстеллар»?',
+            options: ['Стивен Спилберг', 'Кристофер Нолан', 'Джеймс Кэмерон', 'Ридли Скотт'],
+            correct: 1
+          },
+          {
+            text: 'В каком году вышел первый «Мститель»?',
+            options: ['2008', '2010', '2012', '2014'],
+            correct: 2
+          },
+          {
+            text: 'Кто написал «Гамлета»?',
+            options: ['Чарльз Диккенс', 'Уильям Шекспир', 'Джон Мильтон', 'Марк Твен'],
+            correct: 1
+          }
+        ]
+      },
+      {
+        id: 'q4',
+        title: 'Технологии',
+        questions: [
+          {
+            text: 'Что означает HTML?',
+            options: ['HyperText Machine Language', 'HyperText Markup Language', 'HighText Module Link', 'HyperTool Markup Language'],
+            correct: 1
+          },
+          {
+            text: 'Какой язык программирования назван в честь острова?',
+            options: ['Python', 'Java', 'Ruby', 'Swift'],
+            correct: 1
+          },
+          {
+            text: 'Кто основал компанию Apple?',
+            options: ['Билл Гейтс', 'Марк Цукерберг', 'Стив Джобс', 'Джефф Безос'],
+            correct: 2
+          }
+        ]
+      },
+      {
+        id: 'q5',
+        title: 'История',
+        questions: [
+          {
+            text: 'В каком году произошла Французская революция?',
+            options: ['1776', '1789', '1804', '1815'],
+            correct: 1
+          },
+          {
+            text: 'Кто был первым президентом США?',
+            options: ['Авраам Линкольн', 'Джон Адамс', 'Томас Джефферсон', 'Джордж Вашингтон'],
+            correct: 3
+          },
+          {
+            text: 'В каком году закончилась Вторая мировая война?',
+            options: ['1943', '1944', '1945', '1946'],
+            correct: 2
+          }
+        ]
       }
     ];
     saveData();
@@ -88,6 +149,7 @@ function savePlayedCount() {
 
 function showPage(id) {
   var pages = document.querySelectorAll('.page');
+
   pages.forEach(function(p) {
     p.classList.remove('active');
   });
@@ -100,6 +162,7 @@ function showPage(id) {
 
 function renderHome() {
   var totalQ = 0;
+
   allQuizzes.forEach(function(q) {
     totalQ += q.questions.length;
   });
@@ -113,32 +176,40 @@ function renderHome() {
 
   if (allQuizzes.length === 0) {
     list.innerHTML =
-      '<div class="empty">' +
-      '<div class="empty-icon">🎯</div>' +
-      '<div class="empty-text">Викторин пока нет</div>' +
+      '<div class="col-12">' +
+      '<div class="empty-state">' +
+      '<span class="empty-icon">🎯</span>' +
+      '<div class="empty-title">Викторин пока нет</div>' +
       '<div class="empty-sub">Создай первую!</div>' +
+      '</div>' +
       '</div>';
     return;
   }
 
   allQuizzes.forEach(function(quiz) {
-    var card = document.createElement('div');
-    card.className = 'quiz-card';
-    card.innerHTML =
-      '<div onclick="startQuiz(\'' + quiz.id + '\')" style="flex:1; cursor:pointer;">' +
-      '<div class="quiz-card-title">' + quiz.title + '</div>' +
-      '<div class="quiz-card-meta">' + quiz.questions.length + ' вопросов</div>' +
+    var col = document.createElement('div');
+
+    col.className = 'col-12 col-md-6 col-lg-4';
+
+    col.innerHTML =
+      '<div class="quiz-item-card">' +
+      '<div onclick="startQuiz(\'' + quiz.id + '\')">' +
+      '<div class="quiz-item-title">' + quiz.title + '</div>' +
+      '<div class="quiz-item-meta">' + quiz.questions.length + ' вопросов</div>' +
       '</div>' +
-      '<div style="display:flex; align-items:center;">' +
-      '<div class="quiz-card-arrow" onclick="startQuiz(\'' + quiz.id + '\')" style="cursor:pointer;">→</div>' +
-      '<button class="quiz-card-del" onclick="askDelete(\'' + quiz.id + '\')" title="Удалить">✕</button>' +
+      '<div class="quiz-item-bottom">' +
+      '<span class="quiz-item-arrow">→</span>' +
+      '<button class="quiz-item-del" onclick="askDelete(\'' + quiz.id + '\')" title="Удалить">✕</button>' +
+      '</div>' +
       '</div>';
-    list.appendChild(card);
+
+    list.appendChild(col);
   });
 }
 
 function askDelete(id) {
   deleteTargetId = id;
+
   document.getElementById('delete-modal').classList.add('open');
 }
 
@@ -159,6 +230,7 @@ function confirmDelete() {
 
 function renderCreatePage() {
   document.getElementById('quiz-title-input').value = '';
+
   createQuestions = [];
   renderQuestionsList();
   addQuestion();
@@ -192,42 +264,26 @@ function renderQuestionsList() {
   createQuestions.forEach(function(q, qi) {
     var block = document.createElement('div');
     block.className = 'q-block';
-    block.id = 'qblock-' + qi;
 
     var html =
-      '<div class="q-num" style="display:flex; justify-content:space-between; align-items:center;">' +
+      '<div class="q-num" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px;">' +
       '<span>Вопрос ' + (qi + 1) + '</span>' +
       (createQuestions.length > 1
-        ? '<button onclick="removeQuestion(' + qi + ')" style="background:none;border:none;color:#ff4444;cursor:pointer;font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:2px;font-family:Arial Black,Arial,sans-serif;">Удалить</button>'
+        ? '<button onclick="removeQuestion(' + qi + ')" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:2px;font-family:inherit;">Удалить</button>'
         : '') +
       '</div>';
 
-    html +=
-      '<input type="text" placeholder="Текст вопроса..." value="' +
-      esc(q.text) +
-      '" oninput="createQuestions[' +
-      qi +
-      '].text = this.value" style="margin-bottom: 18px;" />';
+    html += '<input type="text" class="input-field" placeholder="Текст вопроса..." value="' + esc(q.text) + '" oninput="createQuestions[' + qi + '].text = this.value" style="margin-bottom: 18px;" />';
 
-    html += '<div class="q-num" style="margin-top:4px;">Варианты ответа — отметь правильный ✓</div>';
+    html += '<div class="q-num" style="margin-bottom: 12px;">Варианты — отметь правильный</div>';
 
     q.options.forEach(function(opt, oi) {
       html +=
         '<div class="option-row">' +
-        '<button class="correct-btn ' +
-        (q.correct === oi ? 'selected' : '') +
-        '" onclick="setCorrect(' + qi + ',' + oi + ')">' +
-        (q.correct === oi ? '✓' : oi + 1) +
+        '<button class="correct-btn ' + (q.correct === oi ? 'selected' : '') + '" onclick="setCorrect(' + qi + ',' + oi + ')">' +
+        (q.correct === oi ? '✓' : LETTERS[oi]) +
         '</button>' +
-        '<input type="text" placeholder="Вариант ' +
-        (oi + 1) +
-        '..." value="' +
-        esc(opt) +
-        '" oninput="createQuestions[' +
-        qi +
-        '].options[' +
-        oi +
-        '] = this.value" />' +
+        '<input type="text" class="input-field" placeholder="Вариант ' + LETTERS[oi] + '..." value="' + esc(opt) + '" oninput="createQuestions[' + qi + '].options[' + oi + '] = this.value" />' +
         '</div>';
     });
 
@@ -242,7 +298,7 @@ function setCorrect(qi, oi) {
 }
 
 function esc(str) {
-  return str.replace(/"/g, '"').replace(/</g, '<');
+  return str.replace(/"/g, '&quot;').replace(/</g, '&lt;');
 }
 
 function saveQuiz() {
@@ -260,7 +316,7 @@ function saveQuiz() {
     }
     q.options.forEach(function(o, oi) {
       if (!o.trim()) {
-        showToast('Заполни вариант ' + (oi + 1) + ' в вопросе ' + (qi + 1));
+        showToast('Заполни вариант ' + LETTERS[oi] + ' в вопросе ' + (qi + 1));
         ok = false;
       }
     });
@@ -280,6 +336,7 @@ function saveQuiz() {
 }
 
 function startQuiz(id) {
+
   currentQuiz = null;
   allQuizzes.forEach(function(q) {
     if (q.id === id) currentQuiz = q;
@@ -312,10 +369,8 @@ function renderQuestion() {
   q.options.forEach(function(opt, oi) {
     var btn = document.createElement('button');
     btn.className = 'answer-option';
-    btn.textContent = opt;
-    btn.onclick = function() {
-      pickAnswer(oi);
-    };
+    btn.innerHTML = '<span class="opt-letter">' + LETTERS[oi] + '</span>' + opt;
+    btn.onclick = function() { pickAnswer(oi); };
     list.appendChild(btn);
   });
 
@@ -368,6 +423,7 @@ function quitQuiz() {
 
 function showResult() {
   playedCount++;
+
   savePlayedCount();
 
   var total = currentQuiz.questions.length;
@@ -378,22 +434,11 @@ function showResult() {
 
   var msg = '';
   var sub = '';
-  if (pct === 100) {
-    msg = 'Идеально! 🔥';
-    sub = 'Ты знаешь всё!';
-  } else if (pct >= 75) {
-    msg = 'Отлично! ✨';
-    sub = 'Почти идеально';
-  } else if (pct >= 50) {
-    msg = 'Неплохо! 👍';
-    sub = 'Можно лучше';
-  } else if (pct >= 25) {
-    msg = 'Стараешься! 💪';
-    sub = 'Повтори материал';
-  } else {
-    msg = 'В следующий раз! 😅';
-    sub = 'Попробуй ещё раз';
-  }
+  if (pct === 100)      { msg = 'Идеально! 🔥';       sub = 'Ты знаешь всё!'; }
+  else if (pct >= 75)   { msg = 'Отлично! ✨';         sub = 'Почти идеально'; }
+  else if (pct >= 50)   { msg = 'Неплохо! 👍';         sub = 'Можно лучше'; }
+  else if (pct >= 25)   { msg = 'Стараешься! 💪';      sub = 'Повтори материал'; }
+  else                  { msg = 'В следующий раз! 😅'; sub = 'Попробуй ещё раз'; }
 
   document.getElementById('result-msg').textContent = msg;
   document.getElementById('result-sub').textContent = sub + ' — ' + pct + '%';
@@ -406,34 +451,17 @@ function showResult() {
     var isRight = ua.chosen === ua.correct;
 
     var block = document.createElement('div');
-    block.style.cssText =
-      'border: 3px solid ' +
-      (isRight ? '#D8FF00' : '#ff4444') +
-      ';' +
-      'border-radius: 20px;' +
-      'padding: 22px 26px;' +
-      'margin-bottom: 14px;' +
-      'text-align: left;';
+    block.className = 'detail-card ' + (isRight ? 'correct-card' : 'wrong-card');
 
     block.innerHTML =
-      '<div style="font-size:11px;text-transform:uppercase;letter-spacing:3px;color:' +
-      (isRight ? '#D8FF00' : '#ff4444') +
-      ';margin-bottom:10px;">' +
-      (isRight ? '✓ Верно' : '✕ Неверно') +
-      ' — Вопрос ' +
-      (i + 1) +
+      '<div class="detail-status" style="color:' + (isRight ? 'var(--correct)' : 'var(--danger)') + ';">' +
+      (isRight ? '✓ Верно' : '✕ Неверно') + ' · Вопрос ' + (i + 1) +
       '</div>' +
-      '<div style="font-size:16px;font-weight:900;text-transform:uppercase;margin-bottom:12px;">' +
-      q.text +
-      '</div>' +
+      '<div class="detail-q-text">' + q.text + '</div>' +
       (!isRight
-        ? '<div style="font-size:13px;color:#ff4444;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Твой ответ: ' +
-          q.options[ua.chosen] +
-          '</div>'
+        ? '<div class="detail-answer" style="color:var(--danger);">Твой ответ: ' + q.options[ua.chosen] + '</div>'
         : '') +
-      '<div style="font-size:13px;color:#D8FF00;text-transform:uppercase;letter-spacing:1px;">Правильно: ' +
-      q.options[ua.correct] +
-      '</div>';
+      '<div class="detail-answer" style="color:var(--correct);">Правильно: ' + q.options[ua.correct] + '</div>';
 
     details.appendChild(block);
   });
@@ -447,6 +475,7 @@ function replayQuiz() {
 }
 
 function showToast(msg) {
+
   var t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.add('show');
@@ -458,7 +487,7 @@ function showToast(msg) {
 loadData();
 renderHome();
 
+
 document.getElementById('delete-modal').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
 });
-
